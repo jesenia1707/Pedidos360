@@ -1,0 +1,217 @@
+<div class="productos-page">
+
+  <!-- BOTÓN VOLVER -->
+  <button
+    type="button"
+    class="back-button"
+    (click)="volverInicio()">
+
+    ← Volver al inicio
+
+  </button>
+
+
+  <!-- ENCABEZADO -->
+  <header class="productos-header">
+
+    <div class="header-left">
+
+      <div class="page-icon">
+        🛍️
+      </div>
+
+      <div>
+
+        <span class="eyebrow">
+          PEDIDOS360
+        </span>
+
+        <h1>
+          Productos
+        </h1>
+
+        <p>
+          Consulta los productos disponibles en el sistema.
+        </p>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main class="productos-content">
+
+
+    <!-- CARGANDO -->
+    <section
+      class="status-card"
+      *ngIf="cargando && productos.length === 0 && !error">
+
+      <div class="loading-icon">
+        ⏳
+      </div>
+
+      <h2>
+        Cargando productos...
+      </h2>
+
+      <p>
+        Estamos consultando la información.
+      </p>
+
+    </section>
+
+
+    <!-- ERROR -->
+    <section
+      class="status-card error-card"
+      *ngIf="error && productos.length === 0">
+
+      <div class="loading-icon">
+        ⚠️
+      </div>
+
+      <h2>
+        No pudimos cargar los productos
+      </h2>
+
+      <p>
+        {{ error }}
+      </p>
+
+      <button
+        type="button"
+        (click)="cargarProductos()">
+
+        Intentar nuevamente
+
+        <span>
+          ↻
+        </span>
+
+      </button>
+
+    </section>
+
+
+    <!-- SIN PRODUCTOS -->
+    <section
+      class="status-card"
+      *ngIf="!cargando && !error && productos.length === 0">
+
+      <div class="empty-icon">
+        🛍️
+      </div>
+
+      <h2>
+        No hay productos registrados
+      </h2>
+
+      <p>
+        Todavía no existen productos registrados en el sistema.
+      </p>
+
+    </section>
+
+
+    <!-- LISTADO DE PRODUCTOS -->
+    <section
+      class="products-section"
+      *ngIf="productos.length > 0">
+
+      <div class="products-title">
+
+        <div>
+
+          <span class="eyebrow">
+            CATÁLOGO
+          </span>
+
+          <h2>
+            Productos disponibles
+          </h2>
+
+        </div>
+
+        <span class="products-count">
+          {{ productos.length }} producto(s)
+        </span>
+
+      </div>
+
+
+      <div class="products-grid">
+
+        <article
+          class="producto-card"
+          *ngFor="let producto of productos">
+
+          <div class="producto-icon">
+            🛍️
+          </div>
+
+
+          <div class="producto-info">
+
+            <span class="producto-label">
+              PRODUCTO
+            </span>
+
+            <h3>
+              {{ producto.nombre }}
+            </h3>
+
+
+            <div class="producto-data">
+
+              <div>
+
+                <span>
+                  PRECIO
+                </span>
+
+                <strong>
+                  ${{ producto.precio | number:'1.0-0' }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  STOCK
+                </span>
+
+                <strong>
+                  {{ producto.stock }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="stock-badge"
+            [class.sin-stock]="producto.stock === 0">
+
+            <span></span>
+
+            {{ producto.stock > 0 ? 'Disponible' : 'Sin stock' }}
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
