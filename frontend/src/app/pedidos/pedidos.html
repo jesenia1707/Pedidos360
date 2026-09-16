@@ -1,0 +1,235 @@
+<div class="pedidos-page">
+
+  <!-- BOTÓN VOLVER -->
+  <button
+    type="button"
+    class="back-button"
+    (click)="volverInicio()">
+
+    ← Volver al inicio
+
+  </button>
+
+
+  <!-- ENCABEZADO -->
+  <header class="pedidos-header">
+
+    <div class="header-left">
+
+      <div class="page-icon">
+        📦
+      </div>
+
+      <div>
+
+        <span class="eyebrow">
+          PEDIDOS360
+        </span>
+
+        <h1>
+          Mis pedidos
+        </h1>
+
+        <p>
+          Consulta los pedidos registrados en el sistema.
+        </p>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main class="pedidos-content">
+
+
+    <!-- CARGANDO -->
+    <section
+      class="status-card"
+      *ngIf="cargando && pedidos.length === 0 && !error">
+
+      <div class="loading-icon">
+        ⏳
+      </div>
+
+      <h2>
+        Cargando pedidos...
+      </h2>
+
+      <p>
+        Estamos consultando la información.
+      </p>
+
+    </section>
+
+
+    <!-- ERROR -->
+    <section
+      class="status-card error-card"
+      *ngIf="error && pedidos.length === 0">
+
+      <div class="loading-icon">
+        ⚠️
+      </div>
+
+      <h2>
+        No pudimos cargar los pedidos
+      </h2>
+
+      <p>
+        {{ error }}
+      </p>
+
+      <button
+        type="button"
+        (click)="cargarPedidos()">
+
+        Intentar nuevamente
+
+        <span>
+          ↻
+        </span>
+
+      </button>
+
+    </section>
+
+
+    <!-- SIN PEDIDOS -->
+    <section
+      class="status-card"
+      *ngIf="!cargando && !error && pedidos.length === 0">
+
+      <div class="empty-icon">
+        📦
+      </div>
+
+      <h2>
+        No hay pedidos registrados
+      </h2>
+
+      <p>
+        Todavía no existen pedidos registrados en el sistema.
+      </p>
+
+    </section>
+
+
+    <!-- LISTADO DE PEDIDOS -->
+    <section
+      class="orders-section"
+      *ngIf="pedidos.length > 0">
+
+      <div class="orders-title">
+
+        <div>
+
+          <span class="eyebrow">
+            REGISTROS
+          </span>
+
+          <h2>
+            Pedidos registrados
+          </h2>
+
+        </div>
+
+        <span class="orders-count">
+          {{ pedidos.length }} pedido(s)
+        </span>
+
+      </div>
+
+
+      <div class="orders-grid">
+
+        <article
+          class="pedido-card"
+          *ngFor="let pedido of pedidos">
+
+          <div class="pedido-top">
+
+            <div class="pedido-number">
+
+              <span>
+                PEDIDO
+              </span>
+
+              <strong>
+                #{{ pedido.id }}
+              </strong>
+
+            </div>
+
+            <div class="pedido-status">
+              ● Registrado
+            </div>
+
+          </div>
+
+
+          <div class="pedido-info">
+
+            <div class="info-item">
+
+              <span>
+                CLIENTE
+              </span>
+
+              <strong>
+                {{ pedido.cliente }}
+              </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+              <span>
+                PRODUCTO
+              </span>
+
+              <strong>
+                {{ pedido.producto }}
+              </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+              <span>
+                CANTIDAD
+              </span>
+
+              <strong>
+                {{ pedido.cantidad }}
+              </strong>
+
+            </div>
+
+
+            <div class="info-item total">
+
+              <span>
+                TOTAL
+              </span>
+
+              <strong>
+                ${{ pedido.total | number:'1.0-0' }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
