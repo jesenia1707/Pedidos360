@@ -1,7 +1,7 @@
 <div class="app">
 
   <!-- ================================================= -->
-  <!-- PÁGINA PRINCIPAL -->
+  <!-- PÁGINA PRINCIPAL / LOGIN -->
   <!-- ================================================= -->
 
   <ng-container *ngIf="isHomePage">
@@ -23,7 +23,6 @@
 
       </div>
 
-
       <div
         class="navbar-right"
         *ngIf="isAuthenticated">
@@ -35,7 +34,6 @@
           Sesión activa
 
         </div>
-
 
         <button
           type="button"
@@ -55,7 +53,6 @@
 
     <main class="main-content">
 
-
       <!-- ================= LOGIN ================= -->
 
       <div
@@ -66,29 +63,24 @@
 
         <div class="decor decor-two"></div>
 
-
         <section class="login-card">
 
           <div class="login-logo">
             <span>♡</span>
           </div>
 
-
           <p class="small-title">
             BIENVENIDA A
           </p>
-
 
           <h2>
             Pedidos<span>360</span>
           </h2>
 
-
           <p class="login-description">
             Gestiona tus pedidos y productos
             de manera simple y segura.
           </p>
-
 
           <button
             type="button"
@@ -105,7 +97,6 @@
 
           </button>
 
-
           <p class="secure-text">
             🔒 Acceso seguro mediante AWS Cognito
           </p>
@@ -115,244 +106,23 @@
       </div>
 
 
-      <!-- ================= DASHBOARD ================= -->
+      <!-- ================= REDIRECCIÓN ================= -->
 
       <div
         *ngIf="isAuthenticated"
-        class="dashboard">
-
-
-        <!-- BIENVENIDA -->
-
-        <section class="welcome-card">
-
-          <div class="welcome-text">
-
-            <span class="welcome-label">
-              ✨ PEDIDOS360
-            </span>
-
-
-            <h2>
-              ¡Hola! Qué bueno verte 👋
-            </h2>
-
-
-            <p>
-              Ya estás dentro de tu espacio de gestión.
-              Desde aquí podrás administrar pedidos y productos.
-            </p>
-
-          </div>
-
-
-          <div class="welcome-decoration">
-            ♡
-          </div>
-
-        </section>
-
-
-        <!-- CUENTA -->
-
-        <section class="section-title">
-
-          <div>
-
-            <h3>
-              Tu cuenta
-            </h3>
-
-            <p>
-              Información de tu sesión actual
-            </p>
-
-          </div>
-
-        </section>
-
-
-        <section class="user-card">
-
-          <div class="profile-circle">
-            👤
-          </div>
-
-
-          <div class="user-details">
-
-            <span class="detail-label">
-              USUARIO
-            </span>
-
-
-            <strong>
-              {{ (userData$ | async)?.userData?.username }}
-            </strong>
-
-
-            <span class="detail-label email-label">
-              CORREO ELECTRÓNICO
-            </span>
-
-
-            <span>
-              {{ (userData$ | async)?.userData?.email }}
-            </span>
-
-          </div>
-
-
-          <div class="account-badge">
-
-            <span></span>
-
-            Autenticado
-
-          </div>
-
-        </section>
-
-
-        <!-- GESTIÓN -->
-
-        <section class="section-title cards-title">
-
-          <div>
-
-            <h3>
-              Gestión
-            </h3>
-
-            <p>
-              Accede rápidamente a tus módulos
-            </p>
-
-          </div>
-
-        </section>
-
-
-        <section class="module-grid">
-
-
-          <!-- ================= PEDIDOS ================= -->
-
-          <article class="module-card">
-
-            <div class="module-icon pink">
-              📦
-            </div>
-
-
-            <div class="module-content">
-
-              <h4>
-                Pedidos
-              </h4>
-
-
-              <p>
-                Consulta y gestiona los pedidos
-                registrados en el sistema.
-              </p>
-
-
-              <button
-                type="button"
-                (click)="irAPedidos()">
-
-                Ver pedidos
-
-                <span>
-                  →
-                </span>
-
-              </button>
-
-            </div>
-
-          </article>
-
-
-          <!-- ================= PRODUCTOS ================= -->
-
-          <article class="module-card">
-
-            <div class="module-icon purple">
-              🛍️
-            </div>
-
-
-            <div class="module-content">
-
-              <h4>
-                Productos
-              </h4>
-
-
-              <p>
-                Consulta y administra los productos
-                disponibles.
-              </p>
-
-
-              <button
-                type="button"
-                (click)="irAProductos()">
-
-                Ver productos
-
-                <span>
-                  →
-                </span>
-
-              </button>
-
-            </div>
-
-          </article>
-
-
-          <!-- ================= USUARIOS ================= -->
-
-          <article class="module-card">
-
-            <div class="module-icon peach">
-              👥
-            </div>
-
-
-            <div class="module-content">
-
-              <h4>
-                Usuarios
-              </h4>
-
-
-              <p>
-                Gestiona los usuarios según sus
-                permisos y roles.
-              </p>
-
-
-              <button
-                type="button">
-
-                Ver usuarios
-
-                <span>
-                  →
-                </span>
-
-              </button>
-
-            </div>
-
-          </article>
-
-
-        </section>
+        class="redirect-message">
+
+        <div class="redirect-icon">
+          ✨
+        </div>
+
+        <h2>
+          Bienvenido a Pedidos360
+        </h2>
+
+        <p>
+          Cargando tu espacio de trabajo...
+        </p>
 
       </div>
 
@@ -377,7 +147,7 @@
 
 
   <!-- ================================================= -->
-  <!-- AQUÍ SE CARGAN LAS PÁGINAS DE LAS RUTAS -->
+  <!-- RUTAS: ADMIN / CLIENTE / COLABORADOR -->
   <!-- ================================================= -->
 
   <router-outlet></router-outlet>

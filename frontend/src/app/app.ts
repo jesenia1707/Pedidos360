@@ -4,64 +4,91 @@ import {
   RouterOutlet,
   NavigationEnd
 } from '@angular/router';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { filter } from 'rxjs';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AsyncPipe, NgIf],
+  imports: [RouterOutlet, NgIf],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit {
 
-  private readonly oidcSecurityService = inject(OidcSecurityService);
-  private readonly router = inject(Router);
+  private readonly oidcSecurityService =
+    inject(OidcSecurityService);
+
+  private readonly router =
+    inject(Router);
 
   isAuthenticated = false;
+
   isHomePage = true;
 
-  userData$ = this.oidcSecurityService.userData$;
+  userData$ =
+    this.oidcSecurityService.userData$;
 
-  // Grupos / roles del usuario
   roles: string[] = [];
+
 
   ngOnInit(): void {
 
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd)
+        filter(event =>
+          event instanceof NavigationEnd
+        )
       )
       .subscribe(event => {
 
-        const navigation = event as NavigationEnd;
+        const navigation =
+          event as NavigationEnd;
 
         this.isHomePage =
           navigation.urlAfterRedirects === '/';
 
       });
 
+
     this.oidcSecurityService
       .checkAuth()
-      .subscribe(({ isAuthenticated }) => {
+      .subscribe({
 
-        this.isAuthenticated = isAuthenticated;
+        next: ({ isAuthenticated }) => {
 
-        console.log(
-          'Authenticated:',
-          isAuthenticated
-        );
+          this.isAuthenticated =
+            isAuthenticated;
 
-        if (isAuthenticated) {
+          console.log(
+            'Authenticated:',
+            isAuthenticated
+          );
 
-          this.obtenerRoles();
+
+          if (isAuthenticated) {
+
+            this.obtenerRoles();
+
+          }
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error al comprobar autenticación:',
+            error
+          );
+
+          this.isAuthenticated = false;
 
         }
 
       });
 
   }
+
 
   private obtenerRoles(): void {
 
@@ -76,16 +103,68 @@ export class App implements OnInit {
             payload
           );
 
+
           const grupos =
             payload?.['cognito:groups'];
+
 
           this.roles =
             Array.isArray(grupos)
               ? grupos
               : [];
 
+
           console.log(
             'Roles del usuario:',
+            this.roles
+          );
+
+
+          /*
+           * REDIRECCIÓN SEGÚN ROL
+           */
+
+          if (this.roles.includes('admin')) {
+
+            console.log(
+              'Redirigiendo a panel ADMIN'
+            );
+
+            this.router.navigateByUrl('/admin');
+
+            return;
+
+          }
+
+
+          if (this.roles.includes('Colaborador')) {
+
+            console.log(
+              'Redirigiendo a panel COLABORADOR'
+            );
+
+            this.router.navigateByUrl('/colaborador');
+
+            return;
+
+          }
+
+
+          if (this.roles.includes('Cliente')) {
+
+            console.log(
+              'Redirigiendo a panel CLIENTE'
+            );
+
+            this.router.navigateByUrl('/cliente');
+
+            return;
+
+          }
+
+
+          console.warn(
+            'El usuario no tiene un rol válido:',
             this.roles
           );
 
@@ -106,39 +185,61 @@ export class App implements OnInit {
 
   }
 
+
   login(): void {
 
-    const url =
-      this.oidcSecurityService.getAuthorizeUrl();
-
     console.log(
-      'URL DE COGNITO:',
-      url
+      'Iniciando sesión con Cognito...'
     );
 
     this.oidcSecurityService.authorize();
 
   }
 
+
   logout(): void {
 
     this.oidcSecurityService
       .logoff()
-      .subscribe();
+      .subscribe({
+
+        next: () => {
+
+          this.isAuthenticated = false;
+
+          this.roles = [];
+
+          this.router.navigateByUrl('/');
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error al cerrar sesión:',
+            error
+          );
+
+        }
+
+      });
 
   }
+
 
   irAPedidos(): void {
 
-    this.router.navigate(['/pedidos']);
+    this.router.navigateByUrl('/pedidos');
 
   }
+
 
   irAProductos(): void {
 
-    this.router.navigate(['/productos']);
+    this.router.navigateByUrl('/productos');
 
   }
+
 
   tieneRol(rol: string): boolean {
 

@@ -1,0 +1,81 @@
+<div class="cliente-page">
+
+  <header class="cliente-header">
+    <div class="header-left">
+      <div class="page-icon">🛒</div>
+
+      <div>
+        <span class="eyebrow">PEDIDOS360 · CLIENTE</span>
+        <h1>Panel de cliente</h1>
+        <p>Consulta tus pedidos y los productos disponibles.</p>
+      </div>
+    </div>
+
+    <div class="role-badge">
+      <span>●</span>
+      Cliente
+    </div>
+  </header>
+
+  <main class="cliente-content">
+
+    <section class="welcome-card">
+      <div class="welcome-icon">👋</div>
+
+      <div>
+        <span class="eyebrow">ACCESO AUTORIZADO</span>
+        <h2>Bienvenido a Pedidos360</h2>
+        <p>
+          Puedes consultar los productos disponibles y revisar tus pedidos.
+        </p>
+      </div>
+    </section>
+
+    <section class="modules-section">
+
+      <div class="section-title">
+        <span class="eyebrow">MÓDULOS</span>
+        <h2>Mis opciones</h2>
+      </div>
+
+      <div class="modules-grid">
+
+        <article class="module-card">
+          <div class="module-icon">📦</div>
+
+          <div class="module-info">
+            <span>MIS PEDIDOS</span>
+            <h3>Consultar pedidos</h3>
+            <p>Revisa los pedidos registrados en el sistema.</p>
+          </div>
+
+          <button type="button" (click)="irAPedidos()">
+            Ver pedidos →
+          </button>
+        </article>
+
+        <article class="module-card">
+          <div class="module-icon">🛍️</div>
+
+          <div class="module-info">
+            <span>CATÁLOGO</span>
+            <h3>Ver productos</h3>
+            <p>Consulta los productos disponibles y su stock.</p>
+          </div>
+
+          <button type="button" (click)="irAProductos()">
+            Ver productos →
+          </button>
+        </article>
+
+      </div>
+
+    </section>
+
+    <button type="button" class="back-button" (click)="volverInicio()">
+      ← Volver al inicio
+    </button>
+
+  </main>
+
+</div>

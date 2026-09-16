@@ -1,0 +1,253 @@
+<div class="colaborador-page">
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="colaborador-header">
+
+    <div class="header-left">
+
+      <div class="page-icon">
+        👷
+      </div>
+
+      <div>
+        <span class="eyebrow">
+          PEDIDOS360 · OPERACIONES
+        </span>
+
+        <h1>
+          Panel de colaborador
+        </h1>
+
+        <p>
+          Gestiona las operaciones diarias del sistema.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="role-badge">
+      <span>●</span>
+      Colaborador
+    </div>
+
+  </header>
+
+
+  <!-- ================= CONTENIDO ================= -->
+
+  <main class="colaborador-content">
+
+
+    <!-- ================= BIENVENIDA ================= -->
+
+    <section class="welcome-card">
+
+      <div class="welcome-icon">
+        👋
+      </div>
+
+      <div>
+
+        <span class="eyebrow">
+          ACCESO AUTORIZADO
+        </span>
+
+        <h2>
+          Bienvenido al área de operaciones
+        </h2>
+
+        <p>
+          Desde este panel puedes gestionar pedidos,
+          revisar su seguimiento y controlar el inventario.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= OPERACIONES ================= -->
+
+    <section class="modules-section">
+
+      <div class="section-title">
+
+        <span class="eyebrow">
+          OPERACIONES
+        </span>
+
+        <h2>
+          Gestión diaria
+        </h2>
+
+        <p>
+          Selecciona una operación para continuar.
+        </p>
+
+      </div>
+
+
+      <div class="modules-grid">
+
+
+        <!-- ================= PEDIDOS ================= -->
+
+        <article class="module-card">
+
+          <div class="module-icon">
+            📦
+          </div>
+
+          <div class="module-info">
+
+            <span>
+              PEDIDOS
+            </span>
+
+            <h3>
+              Gestionar pedidos
+            </h3>
+
+            <p>
+              Consulta los pedidos registrados y
+              administra la información necesaria
+              para la operación diaria.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            (click)="irAPedidos()">
+
+            Gestionar pedidos →
+
+          </button>
+
+        </article>
+
+
+        <!-- ================= SEGUIMIENTO ================= -->
+
+        <article class="module-card">
+
+          <div class="module-icon tracking">
+            📊
+          </div>
+
+          <div class="module-info">
+
+            <span>
+              SEGUIMIENTO
+            </span>
+
+            <h3>
+              Seguimiento de pedidos
+            </h3>
+
+            <p>
+              Revisa los pedidos registrados y
+              consulta su información para apoyar
+              la gestión de las operaciones.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            (click)="irAPedidos()">
+
+            Ver seguimiento →
+
+          </button>
+
+        </article>
+
+
+        <!-- ================= INVENTARIO ================= -->
+
+        <article class="module-card">
+
+          <div class="module-icon inventory">
+            🛍️
+          </div>
+
+          <div class="module-info">
+
+            <span>
+              INVENTARIO
+            </span>
+
+            <h3>
+              Control de inventario
+            </h3>
+
+            <p>
+              Consulta productos, precios y stock
+              disponible para apoyar el control
+              del inventario.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            (click)="irAProductos()">
+
+            Revisar inventario →
+
+          </button>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= INFORMACIÓN ================= -->
+
+    <section class="info-card">
+
+      <div class="info-icon">
+        💡
+      </div>
+
+      <div>
+
+        <span class="eyebrow">
+          PERFIL OPERATIVO
+        </span>
+
+        <h3>
+          Funciones del colaborador
+        </h3>
+
+        <p>
+          El colaborador apoya la operación de Pedidos360
+          mediante la gestión de pedidos, el seguimiento
+          de información y la revisión del inventario.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= VOLVER ================= -->
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="volverInicio()">
+
+      ← Volver al inicio
+
+    </button>
+
+
+  </main>
+
+</div>

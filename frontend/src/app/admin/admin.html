@@ -1,0 +1,96 @@
+<div class="admin-page">
+
+  <header class="admin-header">
+    <div class="header-left">
+      <div class="page-icon">👑</div>
+
+      <div>
+        <span class="eyebrow">PEDIDOS360 · ADMINISTRACIÓN</span>
+        <h1>Panel de administrador</h1>
+        <p>Gestiona y consulta la información del sistema.</p>
+      </div>
+    </div>
+
+    <div class="role-badge">
+      <span>●</span>
+      Administrador
+    </div>
+  </header>
+
+  <main class="admin-content">
+
+    <section class="welcome-card">
+      <div class="welcome-icon">🛡️</div>
+
+      <div>
+        <span class="eyebrow">ACCESO AUTORIZADO</span>
+        <h2>Bienvenido al panel administrativo</h2>
+        <p>
+          Tienes permisos de administrador para acceder a los módulos
+          disponibles del sistema.
+        </p>
+      </div>
+    </section>
+
+    <section class="modules-section">
+
+      <div class="section-title">
+        <span class="eyebrow">MÓDULOS</span>
+        <h2>Administración del sistema</h2>
+      </div>
+
+      <div class="modules-grid">
+
+        <article class="module-card">
+          <div class="module-icon">📦</div>
+
+          <div class="module-info">
+            <span>PEDIDOS</span>
+            <h3>Gestión de pedidos</h3>
+            <p>Consulta los pedidos registrados en el sistema.</p>
+          </div>
+
+          <button type="button" (click)="irAPedidos()">
+            Ver pedidos →
+          </button>
+        </article>
+
+        <article class="module-card">
+          <div class="module-icon">🛍️</div>
+
+          <div class="module-info">
+            <span>PRODUCTOS</span>
+            <h3>Gestión de productos</h3>
+            <p>Consulta los productos disponibles y su stock.</p>
+          </div>
+
+          <button type="button" (click)="irAProductos()">
+            Ver productos →
+          </button>
+        </article>
+
+        <article class="module-card admin-module">
+          <div class="module-icon">⚙️</div>
+
+          <div class="module-info">
+            <span>ADMINISTRACIÓN</span>
+            <h3>Control del sistema</h3>
+            <p>Acceso exclusivo para usuarios con rol administrador.</p>
+          </div>
+
+          <div class="admin-label">
+            🔐 Acceso admin
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <button type="button" class="back-button" (click)="cerrarSesion()">
+      ← Volver al inicio
+    </button>
+
+  </main>
+
+</div>
