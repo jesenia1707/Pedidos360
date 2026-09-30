@@ -56,13 +56,36 @@ jobs:
             cd /home/ec2-user/productos
 
             echo "Deteniendo aplicación anterior..."
-            pkill -f "/home/ec2-user/productos/productos-.*\.jar" || true
+
+            if [ -f productos.pid ]; then
+              PID=$(cat productos.pid)
+
+              if kill -0 "$PID" 2>/dev/null; then
+                kill "$PID"
+                echo "Aplicación anterior detenida."
+                sleep 3
+              else
+                echo "El proceso anterior ya no estaba ejecutándose."
+              fi
+
+              rm -f productos.pid
+            else
+              echo "No existe una aplicación anterior registrada."
+            fi
 
             echo "Iniciando Productos..."
+
             nohup java -jar productos-0.0.1-SNAPSHOT.jar > productos.log 2>&1 &
 
-            echo "Productos iniciado"
+            echo $! > productos.pid
+
+            echo "Productos iniciado con PID:"
+            cat productos.pid
+
             sleep 5
 
             echo "Procesos activos:"
-            ps aux | grep productos
+            ps -p "$(cat productos.pid)" -f
+
+            echo "Últimas líneas del log:"
+            tail -n 20 productos.log
