@@ -17,6 +17,7 @@ public class Producto {
     private String nombre;
     private Double precio;
     private Integer stock;
+    private String descripcion;
 
     public Producto() {
     }
@@ -51,5 +52,13 @@ public class Producto {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public String getDescripcion() {
+    return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
     }
 }
