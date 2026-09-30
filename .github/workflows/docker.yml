@@ -35,8 +35,8 @@ jobs:
           host: ${{ vars.TARGET_HOST_IP }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "productos/build/libs/*.jar"
-          target: "/home/ec2-user/productos"
+          source: "productos/build/libs/productos-0.0.1-SNAPSHOT.jar"
+          target: "/home/ec2-user/productos/productos.jar"
 
   deploy:
     runs-on: ubuntu-latest
@@ -69,13 +69,11 @@ jobs:
               fi
 
               rm -f productos.pid
-            else
-              echo "No existe una aplicación anterior registrada."
             fi
 
             echo "Iniciando Productos..."
 
-            nohup java -jar productos-0.0.1-SNAPSHOT.jar > productos.log 2>&1 &
+            nohup java -jar productos.jar > productos.log 2>&1 &
 
             echo $! > productos.pid
 
@@ -84,7 +82,7 @@ jobs:
 
             sleep 5
 
-            echo "Procesos activos:"
+            echo "Proceso:"
             ps -p "$(cat productos.pid)" -f
 
             echo "Últimas líneas del log:"
