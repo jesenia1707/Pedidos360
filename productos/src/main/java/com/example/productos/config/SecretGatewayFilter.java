@@ -1,3 +1,4 @@
+
 package com.example.productos.config;
 
 import jakarta.servlet.FilterChain;
@@ -20,16 +21,28 @@ public class SecretGatewayFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
 
         String secretHeader = request.getHeader("X-Secret-Gateway");
 
-        if (expectedSecret == null || !expectedSecret.equals(secretHeader)) {
+        System.out.println("=== DIAGNOSTICO GATEWAY ===");
+        System.out.println("Secreto configurado: "
+                + (expectedSecret != null && !expectedSecret.isBlank()));
+        System.out.println("Cabecera recibida: "
+                + (secretHeader != null && !secretHeader.isBlank()));
+        System.out.println("Secretos coinciden: "
+                + (expectedSecret != null
+                        && expectedSecret.equals(secretHeader)));
+        System.out.println("===========================");
+
+        if (expectedSecret == null
+                || expectedSecret.isBlank()
+                || !expectedSecret.equals(secretHeader)) {
+
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("text/plain;charset=UTF-8");
             response.getWriter().write(
-                    "Acceso denegado: Secreto de pasarela inválido o ausente"
-            );
+                    "Acceso denegado: Secreto de pasarela inválido o ausente");
             return;
         }
 
