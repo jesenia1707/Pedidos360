@@ -1,0 +1,181 @@
+name: Build and Deploy Productos
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build Productos
+        run: |
+          chmod +x gradlew
+          ./gradlew clean build -x test
+
+      - name: Upload JAR to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.TARGET_HOST_IP }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "build/libs/productos-0.0.1-SNAPSHOT.jar"
+          target: "/home/ec2-user/productos/"
+          strip_components: 2
+          overwrite: true
+          rm: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy Productos en EC2
+        uses: appleboy/ssh-action@v1.2.2
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          GATEWAY_SECRET: ${{ secrets.GATEWAY_SECRET }}
+        with:
+          host: ${{ vars.TARGET_HOST_IP }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: DB_URL,DB_USER,DB_PASSWORD,GATEWAY_SECRET
+
+          script: |
+            echo "Conectado a EC2"
+
+            # Instalar Java 21 de forma idempotente (solo si no está disponible)
+            if command -v java >/dev/null 2>&1; then
+              echo "Java ya está instalado:"
+              java -version
+            else
+              echo "Java no encontrado. Instalando Java 21 (Amazon Corretto)..."
+
+              if command -v dnf >/dev/null 2>&1; then
+                sudo dnf install -y java-21-amazon-corretto-headless
+              elif command -v yum >/dev/null 2>&1; then
+                sudo yum install -y java-21-amazon-corretto-headless
+              elif command -v apt-get >/dev/null 2>&1; then
+                sudo apt-get update
+                sudo apt-get install -y openjdk-21-jre-headless
+              else
+                echo "No se encontró un gestor de paquetes compatible (dnf/yum/apt-get)." >&2
+                exit 1
+              fi
+
+              if command -v java >/dev/null 2>&1; then
+                echo "Java instalado correctamente:"
+                java -version
+              else
+                echo "La instalación de Java falló." >&2
+                exit 1
+              fi
+            fi
+
+            mkdir -p /home/ec2-user/productos
+            cd /home/ec2-user/productos
+
+            # Validar que existan las variables requeridas inyectadas desde GitHub Secrets
+            echo "Validando variables de entorno requeridas..."
+
+            MISSING=""
+            for VAR in DB_URL DB_USER DB_PASSWORD GATEWAY_SECRET; do
+              eval "VALUE=\${$VAR}"
+              if [ -z "$VALUE" ]; then
+                echo "FALTA: $VAR" >&2
+                MISSING="$MISSING $VAR"
+              else
+                echo "OK: $VAR"
+              fi
+            done
+
+            if [ -n "$MISSING" ]; then
+              echo ""
+              echo "Error: faltan variables de entorno requeridas:$MISSING" >&2
+              echo "Defínelas como GitHub Secrets del repositorio (Settings > Secrets and variables > Actions)." >&2
+              echo "No se detiene ni reinicia la aplicación para no dejarla caída." >&2
+              exit 1
+            fi
+
+            echo "Todas las variables requeridas están definidas."
+
+            echo "Deteniendo aplicación anterior..."
+
+            if [ -f productos.pid ]; then
+              PID=$(cat productos.pid)
+
+              if kill -0 "$PID" 2>/dev/null; then
+                kill "$PID"
+                echo "Aplicación anterior detenida."
+                sleep 3
+              else
+                echo "El proceso anterior ya no estaba ejecutándose."
+              fi
+
+              rm -f productos.pid
+            fi
+
+            JAR="productos-0.0.1-SNAPSHOT.jar"
+
+            if [ ! -f "$JAR" ]; then
+              echo "Error: no se encontró el JAR '$JAR' en /home/ec2-user/productos." >&2
+              exit 1
+            fi
+
+            echo "Iniciando Productos..."
+
+            nohup java -jar "$JAR" > productos.log 2>&1 &
+
+            echo $! > productos.pid
+
+            echo "Productos iniciado con PID:"
+            cat productos.pid
+
+            # Health check: esperar a que el puerto 8081 acepte conexiones
+            echo "Esperando a que la aplicación levante en el puerto 8081..."
+
+            HEALTHY=""
+            for i in $(seq 1 30); do
+              # Si el proceso ya murió, no tiene sentido seguir esperando
+              if ! kill -0 "$(cat productos.pid)" 2>/dev/null; then
+                echo "El proceso de la aplicación terminó inesperadamente." >&2
+                break
+              fi
+
+              if (echo > /dev/tcp/127.0.0.1/8081) >/dev/null 2>&1; then
+                HEALTHY="ok"
+                echo "La aplicación responde en el puerto 8081 (intento $i)."
+                break
+              fi
+
+              sleep 2
+            done
+
+            echo "Últimas líneas del log:"
+            tail -n 30 productos.log
+
+            if [ -z "$HEALTHY" ]; then
+              echo "" >&2
+              echo "Error: la aplicación no quedó escuchando en el puerto 8081." >&2
+              echo "Revisa el log anterior para ver la causa." >&2
+              exit 1
+            fi
+
+            echo "Deploy validado: Productos está arriba y escuchando en 8081."
